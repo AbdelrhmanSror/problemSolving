@@ -45,9 +45,8 @@ fun findMedian(freq: Array<Int>, d: Int): Double {
     var last: Int? = null
     var median = 0.0
     var count = 0
-    //for sure i know the location of the two number in the middle to get the average of them
-    // because they are sorted so it is easily to know the location of the medians
-
+    //if d is even then median will be the average of two middle number
+    //else d is odd then median will be the middle number
     if (d.rem(2) == 0) {
         for (j in freq.indices) {
             count += freq[j]
@@ -60,6 +59,7 @@ fun findMedian(freq: Array<Int>, d: Int): Double {
             }
         }
         median = (first!! + last!!) / 2.0
+
     } else {
         loop@ for (j in freq.indices) {
             count += freq[j]
@@ -77,7 +77,7 @@ fun findMedian(freq: Array<Int>, d: Int): Double {
 }
 
 
-fun createFreq() = Array<Int>(201) { 0 }
+fun createFreq() = Array(201) { 0 }
 fun updateFreq(array: Array<Int>, freq: Array<Int>, range: IntRange) {
     //if the indicator is on the first item then just create and initialize the frequency
     // otherwise go on with increasing and decreasing the frequency of the item

@@ -5,13 +5,13 @@ import kotlin.collections.HashMap
 
 
 fun main() {
-    val scan = Scanner(System.`in`)
+    /*val scan = Scanner(System.`in`)
     val arr = Array<Int>(100000) { 0 }
     for (i in 0 until 100000) {
         val arrItem = scan.nextLine().trim().toInt()
         arr[i] = arrItem
-    }
-    println(countInversions(arr))
+    }*/
+    println(countInversions(arrayOf(2,1,3,1,2)))
 }
 
     fun countInversions(arr: Array<Int>): Long {
@@ -46,9 +46,8 @@ fun main() {
         var left = leftStart
         var right = rightStart
         var index = leftStart
-        var i = 0
-        var j = 0
         var counter = 0L
+        var i=0
         while (left <= leftEnd && right <= rightEnd) {
             if (arr[left] <= arr[right]) {
                 temp[index] = arr[left]
@@ -57,11 +56,12 @@ fun main() {
             } else {
                 temp[index] = arr[right]
                 right++
-                j++
-                counter += (middle - leftStart + 1 - i)
+                counter += ((leftEnd - leftStart + 1) - i)
             }
             index++
         }
+
+
 
         System.arraycopy(arr, left, temp, index, leftEnd - left + 1)
         System.arraycopy(arr, right, temp, index, rightEnd - right + 1)
