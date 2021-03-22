@@ -1,124 +1,75 @@
 package com.company
 
+import java.lang.Long.min
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 fun main() {
-    val scan = Scanner(System.`in`)
 
-    val s = scan.nextLine()
+    println(getSpecialStringCount("aabaa"))
 
-    val result = substrCount(5, s)
-    val result2 = substrCount2(5, s)
-    println(result)
-    println(result2)
 
 }
+
+
+/**
+ * A string is said to be a special string if either of two conditions is met:
+ * All of the characters are the same, e.g. aaa.
+ * All characters except the middle one are the same, e.g. aadaa.
+ * A special substring is any substring of a string which meets one of those criteria.
+ * Given a string, determine how many special substrings can be formed from it.
+ */
+fun getSpecialStringCount(s: String): Long {
+    var counter = 0L
+    when {
+        s.isEmpty() -> return 0
+        s.length == 1 -> return 1
+        else -> {
+            val charList = ArrayList<Point>()
+            var tempCount: Long = 0
+            var start = 0
+            var ch = s[0]
+            var startIndex: Int
+            var middleIndex: Int
+            //counter of special string that pass case 1
+            //also accumulate counter of sequential char in list
+            //so is string is aabaa   the list will contains a:2  b:1  a:2
+            for (i in 1 until s.length) {
+                //if current string equal to previous string then add all possible palindrome of this string to counter
+                if (ch == s[i]) {
+                    tempCount += (i - start)
+                } else {
+                    //when the case fails we reset the counter after passing its value to the actual counter
+                    counter += tempCount
+                    charList.add(Point(ch, (i - start).toLong()))
+                    tempCount = 0
+                    ch = s[i]
+                    //update the new start index
+                    start = i
+                }
+            }
+            charList.add(Point(ch, (s.length - start).toLong()))
+            //adding the length of string to counter because char itself is considered as special string
+            counter += tempCount + s.length
+            //continue with checking the special string that achieve case 2
+            if (charList.size >= 3) {
+                for (i in 2 until charList.size) {
+                    startIndex = i - 2
+                    middleIndex = (startIndex + i) / 2
+                    //if the current char number is equal to previous char number and
+                    // middle char count is equal to 1 and doesn't equal to any of current and previous char then there is a special string
+                    if (charList[startIndex].key == charList[i].key && charList[middleIndex].count == 1L && charList[middleIndex].key != charList[startIndex].key) {
+                        counter += min(charList[startIndex].count, charList[i].count)
+                    }
+                }
+            }
+
+
+        }
+    }
+    return counter
+}
+
 
 data class Point(var key: Char, var count: Long)
-
-// Complete the substrCount function below.
-fun substrCount2(n: Int, s: String): Long {
-    var s = s
-    s = "$s "
-    val l = ArrayList<Point>()
-    var count: Long = 1
-    var ch = s[0]
-    for (i in 1 until s.length) {
-        if (ch == s[i]) count++ else {
-            l.add(Point(ch, count))
-            count = 1
-            ch = s[i]
-        }
-    }
-    count = 0
-    if (l.size >= 3) {
-        val itr: Iterator<Point> = l.iterator()
-        var prev: Point
-        var curr: Point
-        var next: Point
-        curr = itr.next()
-        next = itr.next()
-        count = curr.count * (curr.count + 1) / 2
-        for (i in 1 until l.size - 1) {
-            prev = curr
-            curr = next
-            next = itr.next()
-            count += curr.count * (curr.count + 1) / 2
-            if (prev.key == next.key && curr.count == 1L) count += if (prev.count > next.count) next.count else prev.count
-        }
-        count += next.count * (next.count + 1) / 2
-    } else {
-        for (curr in l) {
-            count += curr.count * (curr.count + 1) / 2
-        }
-    }
-    return count
-}
-
-
-data class SpecialString(var char: Char, var number: Long, var isFinished: Boolean = false)
-
-// Complete the substrCount function below.
-fun substrCount(n: Int, s: String): Long {
-    var conscutiveStringCounter = 0L
-    var normalCounter = 0L
-    var indexCounter = 1L
-    var x: SpecialString? = null
-    for (i in s.indices) {
-        when {
-            (i + 1) < s.length && s[i] == s[i + 1] -> {
-                conscutiveStringCounter += indexCounter
-                println("normalCounter  $normalCounter $indexCounter  $conscutiveStringCounter ${s[i]}  $i")
-                indexCounter++
-                if (x == null || s[i] != x.char) {
-                    x = SpecialString(s[i], indexCounter)
-                } else if (s[i] == x.char) {
-                    if (!x.isFinished) {
-                        x.number = indexCounter
-                    } else {
-                        if (indexCounter <= x.number) {
-                            if (indexCounter == x.number)
-                                x.isFinished = false
-                            conscutiveStringCounter += 1
-                        } else {
-                            x = SpecialString(s[i], indexCounter)
-
-                        }
-                    }
-                }
-
-            }
-            (i + 2) < s.length && s[i] == s[i + 2] -> {
-                normalCounter += conscutiveStringCounter + 1
-                println("normalCounter  $normalCounter $indexCounter  $conscutiveStringCounter ${s[i]}  $i")
-                conscutiveStringCounter = 0L
-                indexCounter = 1L
-                x?.let {
-                    if (it.isFinished)
-                        x = null
-                    else {
-                        it.isFinished = true
-                    }
-
-                }
-
-            }
-            else -> {
-                normalCounter += conscutiveStringCounter
-                println("normalCounter  $normalCounter $indexCounter  $conscutiveStringCounter ${s[i]}  $i")
-                conscutiveStringCounter = 0L
-                indexCounter = 1L
-                if (x != null &&((i+2)<s.length&&x!!.char!=s[i+2])) x = null
-
-
-            }
-        }
-    }
-    normalCounter += conscutiveStringCounter + s.length
-    println("normalCounter  $normalCounter $indexCounter  $conscutiveStringCounter ${s.length} ")
-
-    return normalCounter
-
-
-}
