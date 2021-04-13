@@ -1,42 +1,39 @@
 package com.company
 
-fun main(){
-   // print(superDigit(x,100000))
+fun main() {
+    //print(superDigit(x,100000))
+
+    print(digitSum("3546630947312051453014172159647935984478824945973141333062252613718025688716704470547449723886626736", 100000))
+
 }
 
-// Complete the superDigit function below.
-fun superDigit(n: String, k: Int): Int {
-     val result=superDigit3(n.toCharArray())*k
-    print(result)
-    return if(result<10){
-        result
-    } else{
-        superDigit2(result.toString())
+
+fun digitSum(n: String, k: Int = 0): String {
+    if (n.length == 1)
+        return n
+    return digitSum(n.sumOfRepeatDigits(k).sumDigit().toString())
+}
+
+/**
+ * responsible for sum of each number of a digit that repeats k times
+ */
+fun String.sumOfRepeatDigits(k: Int): String {
+    if (k == 0) return this
+    var number = 0L
+    this.forEach {
+        number += it.toString().toLong()
     }
 
+    return number.times(k).toString()
+
 }
 
-// Complete the superDigit function below.
-fun superDigit2(n: String): Int {
-    if(n.length==1){
-        return n[0].toRealInt()
+//splitting each number in a digit then sum all numbers together
+fun String.sumDigit(): Long {
+    var number = 0L
+    this.forEach {
+        number += it.toString().toLong()
     }
-    val result=superDigit3(n.toCharArray())
-    return superDigit2(result.toString())
-}
-
-
-fun superDigit3(n: CharArray, start: Int=0, end: Int=n.size-1): Int {
-    val middle = (start + end) / 2
-    if (end <= start) {
-        return n[start].toRealInt()
-    }
-    return superDigit3(n, start, middle) + superDigit3(n, middle + 1, end)
+    return number
 
 }
-/*
-fun Char.toRealInt(): Int {
-    return this.toInt() - 48
-}*/
-
-

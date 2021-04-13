@@ -1,43 +1,20 @@
 package com.company
 
 fun main() {
-    print(fibonacci(20))
+    print(fib(3))
 }
-fun fibonacciRecursion(n: Long, numberMap: HashMap<Long, Long> = HashMap()): Long {
-    println(n)
-    val result: Long
-      when {
-        numberMap.contains(n) -> return numberMap[n]!!
-        n == 0L -> return 0L
-        n == 1L -> return 1L
+
+
+fun fib(n: Int, numberMap: HashMap<Int, Long> = HashMap()): Long {
+    return when {
+        numberMap.contains(n) -> numberMap[n]!!
+        n == 0 -> 0
+        n == 1 -> 1
         else -> {
-            result=fibonacciRecursion(n - 1, numberMap) + fibonacciRecursion(n - 2, numberMap)
-            numberMap[n] = result
+            val x=fib(n - 1,numberMap) + fib(n - 2,numberMap)
+            numberMap[n]=x
+            return x
 
         }
     }
-    return result
-
-
-}
-
-fun fibonacci(n: Int): Int {
-    var first = 0
-    var second = 1
-    var sum = 0
-    when (n) {
-        0 -> return first
-        1 -> return second
-        else -> {
-            for (i in 2..n) {
-                sum = first + second
-                first = second
-                second = sum
-            }
-        }
-    }
-    return sum
-
-    // Complete the function.
-
 }

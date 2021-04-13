@@ -19,29 +19,6 @@ import kotlin.math.floor
 
 fun main() {
     //print(getNumberOfWays("111"))
-    print(minimumSwaps(arrayOf(2, 3, 4, 1, 5)))
-}
-
-
-// Complete the arrayManipulation function below.
-fun arrayManipulation(n: Int, queries: Array<Array<Int>>): Long {
-    var max = 0L
-    val queryMap = HashMap<Int, Long>()
-    for (array in queries) {
-        for (i in array[0]..array[1]) {
-            if (queryMap.containsKey(i)) {
-                queryMap[i] = queryMap[i]?.plus(array[2])!!
-            } else {
-                queryMap[i] = array[2].toLong()
-            }
-            if (max < queryMap[i]!!) {
-                max = queryMap[i]!!
-            }
-        }
-    }
-
-    return max
-
 }
 
 
@@ -54,33 +31,6 @@ class CompareElement : Comparator<Int> {
         }
     }
 }
-
-fun minimumSwaps(arr: Array<Int>): Int {
-    var counter = 0
-    val extendArray = TreeMap<Int, Int>(CompareElement())
-    for (i in arr.indices) {
-        extendArray[arr[i]] = i
-    }
-    for (i in arr.indices) {
-        val firstSorted = extendArray.firstKey()
-        if (arr[i] > firstSorted) {
-            counter++
-            extendArray[arr[i]] = extendArray[firstSorted]!!
-            arr.swap(i, extendArray[firstSorted]!!)
-        }
-        extendArray.remove(firstSorted)
-
-    }
-
-    return counter
-}
-
-fun Array<Int>.swap(first: Int, last: Int) {
-    val temp = this[first]
-    this[first] = this[last]
-    this[last] = temp
-}
-
 data class Node(val numberOfWays: Int, val prevNode: Node? = null)
 
 fun getNumberOfWays(message: String): Int {
