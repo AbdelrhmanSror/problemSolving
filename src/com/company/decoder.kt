@@ -31,7 +31,7 @@ class CompareElement : Comparator<Int> {
         }
     }
 }
-data class Node(val numberOfWays: Int, val prevNode: Node? = null)
+private data class Node(val numberOfWays: Int, val prevNode: Node? = null)
 
 fun getNumberOfWays(message: String): Int {
     var tail: Node? = null
