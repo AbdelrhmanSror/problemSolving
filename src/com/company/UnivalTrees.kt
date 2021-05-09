@@ -14,7 +14,7 @@ fun main() {
 
 data class TreeNode(val value: Any, var left: TreeNode? = null, var right: TreeNode? = null)
 
-
+//o(n) time
 fun countUnivalTree(root: TreeNode?): Pair<Int, Boolean> {
     if (root == null)
         return 0 to true
