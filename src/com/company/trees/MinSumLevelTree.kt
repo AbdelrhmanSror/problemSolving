@@ -1,4 +1,4 @@
-package com.company
+package com.company.trees
 
 /**
  * giving a binary tree return the level of the tree that has the minimum sum
@@ -15,7 +15,7 @@ fun main(){
     val one = TreeNode(1, two, three)
     print(getMin(one))
 }
-fun getMin(node: TreeNode?): Int {
+fun getMin(node: TreeNode<Int>?): Int {
     val map = HashMap<Int, Int?>()
     getMinLevel(node, 0, map)
     var least: Pair<Int, Int?> = 0 to Int.MAX_VALUE
@@ -32,7 +32,7 @@ fun getMin(node: TreeNode?): Int {
  * @leastLevel representing the map we would accumulate the the values at each level to get the sum of values at the current level
  * @return none
  */
-fun getMinLevel(node: TreeNode?, currentLevel: Int = 0, leastLevel: HashMap<Int, Int?>) {
+fun getMinLevel(node: TreeNode<Int>?, currentLevel: Int = 0, leastLevel: HashMap<Int, Int?>) {
     if (node == null)
         return
     // level to value pair

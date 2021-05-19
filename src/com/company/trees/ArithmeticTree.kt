@@ -1,8 +1,8 @@
-package com.company
+package com.company.trees
 
 fun main() {
-    val plus = TreeNode('+', TreeNode(3, null, null), TreeNode(2, null, null))
-    val plus2 = TreeNode('+', TreeNode(4, null, null), TreeNode(5, null, null))
+    val plus = TreeNode<Any>('+', TreeNode(3, null, null), TreeNode(2, null, null))
+    val plus2 = TreeNode<Any>('+', TreeNode(4, null, null), TreeNode(5, null, null))
     val mul = TreeNode('*', plus, plus2)
     print(getResult(mul))
 }
@@ -13,7 +13,7 @@ fun main() {
     +           +
   3  2        4   5
  */
-fun getResult(node: TreeNode?): Int? {
+fun getResult(node: TreeNode<Any>?): Int? {
     if (node == null)
         return null
     if (node.left == null && node.right == null)

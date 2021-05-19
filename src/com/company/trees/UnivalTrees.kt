@@ -1,4 +1,4 @@
-package com.company
+package com.company.trees
 
 //A unival tree is a tree where all nodes under it have the same value.
 //given the root to binary tree,count the number of unival subtrees.
@@ -12,10 +12,9 @@ fun main() {
 
 }
 
-data class TreeNode(val value: Any, var left: TreeNode? = null, var right: TreeNode? = null)
 
 //o(n) time
-fun countUnivalTree(root: TreeNode?): Pair<Int, Boolean> {
+fun countUnivalTree(root: TreeNode<Char>?): Pair<Int, Boolean> {
     if (root == null)
         return 0 to true
     //counter of unival tree

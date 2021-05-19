@@ -1,4 +1,4 @@
-package com.company
+package com.company.trees
 
 //construction of tree using inorder and preorder traversal
 
@@ -8,7 +8,7 @@ fun main() {
 
 }
 
-fun construct(preorder: Array<Char>?, inorder: Array<Char>?): TreeNode? {
+fun construct(preorder: Array<Char>?, inorder: Array<Char>?): TreeNode<Char>? {
     if (preorder == null || inorder == null)
         return null
     //if the two array are with size of 1 return the element of the array
