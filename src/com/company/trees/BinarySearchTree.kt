@@ -3,15 +3,20 @@ package com.company.trees
 
 fun main() {
     val binarySearchTree = BinarySearchTree()
-    binarySearchTree.insert(8)
-    binarySearchTree.insert(12)
-    binarySearchTree.insert(4)
-    binarySearchTree.insert(10)
-    binarySearchTree.insert(14)
-    binarySearchTree.insert(2)
-    binarySearchTree.insert(6)
+    /* binarySearchTree.insert(8)
+     binarySearchTree.insert(12)
+     binarySearchTree.insert(4)
+     binarySearchTree.insert(10)
+     binarySearchTree.insert(14)
+     binarySearchTree.insert(2)
+     binarySearchTree.insert(6)
 
-    print(binarySearchTree.ceil(6))
+     print(binarySearchTree.ceil(6))*/
+    val array = arrayOf(1, 2, 3)
+    binarySearchTree.constructAllPossibilities(array).forEach {
+        println(it)
+    }
+
 
 }
 //floor means highest element which is less than or equal to an integer
@@ -19,7 +24,7 @@ fun main() {
 //ceil means lowes element which is grater than or equal to an integer
 
 class BinarySearchTree() {
-     private var root: TreeNode<Int>? = null
+    private var root: TreeNode<Int>? = null
 
     fun insert(value: Int) {
         if (root == null)
@@ -123,6 +128,39 @@ class BinarySearchTree() {
             else -> value
         }
 
+
+    }
+
+    //construction of all possible binary search tree with n nodes where all values from [1..n] are used .
+    // O(N*2^N) TIME AS WELL AS SPACE
+    fun constructAllPossibilities(data: Array<Int>): ArrayList<TreeNode<Int>> {
+        return construct(low = 0, high = data.size - 1, data = data)
+    }
+
+    private fun construct(low: Int, high: Int, data: Array<Int>): ArrayList<TreeNode<Int>> {
+        //tree than contain list of all possible tree
+        val trees = ArrayList<TreeNode<Int>>()
+        if (low > high) {
+            //an equivalent to none node
+            trees.add(TreeNode(-1, null, null))
+            return trees
+        }
+        //looping over all values in array and each time making new root to start from and construct our tree
+        for (i in low..high) {
+            val left = construct(low, i - 1, data)
+            val right = construct(i + 1, high, data)
+
+            //looping over all left tree nodes and assigning it with each node existing in the right
+            for (l in left) {
+                for (r in right) {
+                    val node = TreeNode<Int>(data[i], l, r)
+                    trees.add(node)
+                }
+            }
+
+        }
+        //return the result
+        return trees
 
     }
 }
