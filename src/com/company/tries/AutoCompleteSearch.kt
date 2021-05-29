@@ -13,8 +13,8 @@ fun main() {
     trie.add("coat")
     trie.add("cat")
     trie.add("bear")
-    trie.add("ahmed")
-    trie.add("mohamed")
+    trie.add("deal")
+    trie.add("deer")
     trie.add("abdelrhman")
 
 
@@ -25,27 +25,28 @@ fun main() {
 
 
 class TrieNode {
-    private val nextCharArray: Array<TrieNode?> = arrayOfNulls(26)
-    var word_ending_here = false
-    var currentWord = ' '
-        private set
+    private val nextCharArray = HashMap<Char, TrieNode>()
+    var wordEndingHere = false
 
-    fun isCharExist(index: Int): Boolean {
-        if (this.nextCharArray[index] == null) {
+    fun isCharExist(char: Char): Boolean {
+        if (!this.nextCharArray.containsKey(char)) {
             return false
         }
         return true
 
     }
 
-    fun addChar(index: Int, char: Char) {
+    fun addChar(char: Char) {
         val node = TrieNode()
-        node.currentWord = char
-        nextCharArray[index] = node
+        nextCharArray[char] = node
     }
 
-    fun getNextNodeAt(index: Int): TrieNode {
-        return nextCharArray[index]!!
+    fun getNextNodeAt(char: Char): TrieNode {
+        return nextCharArray[char]!!
+    }
+
+    fun createIterator(): MutableIterator<MutableMap.MutableEntry<Char, TrieNode>> {
+        return nextCharArray.entries.iterator()
     }
 
 }
@@ -54,17 +55,16 @@ class TrieNode {
 class AutoCompleteSearch() {
     private val node = TrieNode()
 
-    //get the index of the char at the array
-    private fun getCharIndex(char: Char) = char - 'a'
+    /* //get the index of the char at the array
+     private fun getCharIndex(char: Char) = char - 'a'
 
-    //using index get the char at specific index
-    fun getChar(index: Int) = (index + 97).toChar()
+     //using index get the char at specific index
+     fun getChar(index: Int) = (index + 97).toChar()*/
     private fun getNode(root: TrieNode, char: Char): TrieNode {
-        val index = getCharIndex(char)
-        if (!root.isCharExist(index)) {
-            root.addChar(index, char)
+        if (!root.isCharExist(char)) {
+            root.addChar(char)
         }
-        return root.getNextNodeAt(index)
+        return root.getNextNodeAt(char)
     }
 
     fun add(word: String) {
@@ -72,30 +72,30 @@ class AutoCompleteSearch() {
         for (char in word) {
             currentTrieNode = getNode(currentTrieNode, char)
         }
-        currentTrieNode.word_ending_here = true
+        currentTrieNode.wordEndingHere = true
     }
 
-    fun isExist(word: String): Boolean {
+    fun isExist(word: String): TrieNode? {
         return isExist(word, node)
 
     }
 
-    private fun isExist(word: String, trieNode: TrieNode?): Boolean {
-        if (trieNode == null) return false
+    private fun isExist(word: String, trieNode: TrieNode?): TrieNode? {
+        if (trieNode == null) return null
         var currentTrieNode: TrieNode = trieNode
         for (i in word.indices) {
             //if we have found the place of char in array is not null this means that the char is exist
-            if (currentTrieNode.isCharExist(getCharIndex(word[i]))) {
+            if (currentTrieNode.isCharExist(word[i])) {
                 //here we update the current node to the node at the index of which current char implies.
                 //for example if the char was a so we can find it at index of 0 at the current node
                 //if we have found the current char at 'a' we update the current node with the node in 'a' index
                 //so when going for the next char we user the node at 'a' as our root
 
-                currentTrieNode = currentTrieNode.getNextNodeAt(getCharIndex(word[i]))
+                currentTrieNode = currentTrieNode.getNextNodeAt(word[i])
             } else
-                return false
+                return null
         }
-        return true
+        return currentTrieNode
     }
 
     //print all words in the trie
@@ -106,18 +106,31 @@ class AutoCompleteSearch() {
 
     }
 
+    //print all words that have word as a prefix
+    fun wordsStartWith(word: String) {
+        val node = isExist(word)
+        if (node != null) {
+            print(node).map {
+                println(word + it)
+            }
+
+        }
+
+
+    }
+
+
     private fun print(currentNode: TrieNode): List<String> {
-        if (currentNode.word_ending_here) return arrayListOf("")
+        if (currentNode.wordEndingHere) return arrayListOf("")
         //list that contains all string constructed until now
         val wordList = arrayListOf<String>()
         //iterating over all chars in trie ,see if the char exist ,get to next connected chars and so on until reached word ending here.
-        for (i in 0 until 26) {
-            if (currentNode.isCharExist(i)) {
-                val list = print(currentNode.getNextNodeAt(i))
-                //join the current char with list of subsequent strings
-                wordList.addAll(getChar(i).joinList(list))
-            }
-
+        val iterator = currentNode.createIterator()
+        while (iterator.hasNext()) {
+            val current = iterator.next()
+            val list = print(current.value)
+            //join the current char with list of subsequent strings
+            wordList.addAll((current.key).joinList(list))
         }
         return wordList
     }

@@ -1,5 +1,7 @@
 package com.company
 
+import com.company.heaps.getMedians
+
 
 fun main() {
     //print(activityNotifications(arrayOf(1,2,3,4,4),4))
