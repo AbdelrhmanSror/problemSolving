@@ -4,15 +4,16 @@ import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 
 fun main() {
     val array = arrayListOf(4, 7, 8, 3, 2, 6, 5)
-    val x: Heap = MinHeap()
-    val y: Heap = MaxHeap()
+    val x: Heap<Int> = MinHeap<Int>()
+    val y: Heap<Int> = MaxHeap<Int>()
     x.addAll(array)
     y.addAll(array)
+    print(y.peek())
 
 }
 
-abstract class Heap() {
-    val arrayV = ArrayList<Int>()
+abstract class Heap<T : Number>() {
+    val arrayV = ArrayList<T>()
 
     init {
         constructHeap()
@@ -20,7 +21,7 @@ abstract class Heap() {
 
     fun size() = arrayV.size
 
-    fun poll(): Int {
+    fun poll(): T {
         if (arrayV.isEmpty()) throw IllegalStateException("heap is empty")
         val item = arrayV[0]
         swap(arrayV, 0, arrayV.size - 1)
@@ -31,18 +32,18 @@ abstract class Heap() {
 
     }
 
-    fun add(item: Int) {
+    fun add(item: T) {
         arrayV.add(item)
         heapifyUp(index = arrayV.size - 1)
 
     }
 
-    fun addAll(array: ArrayList<Int>) {
+    fun addAll(array: ArrayList<T>) {
         array.forEach { add(it) }
 
     }
 
-    fun peek(): Int {
+    fun peek(): T {
         if (arrayV.isEmpty()) throw IllegalStateException("heap is empty") else return arrayV[0]
     }
 
@@ -64,11 +65,11 @@ abstract class Heap() {
     }
 
     //time O(log(n))
-    abstract fun heapifyUp(array: ArrayList<Int> = arrayV, index: Int, size: Int = array.size)
+    abstract fun heapifyUp(array: ArrayList<T> = arrayV, index: Int, size: Int = array.size)
 
     //time O(log(n))
-    abstract fun heapifyDown(array: ArrayList<Int> = arrayV, index: Int, size: Int = array.size)
-    protected fun swap(array: ArrayList<Int>, index1: Int, index2: Int) {
+    abstract fun heapifyDown(array: ArrayList<T> = arrayV, index: Int, size: Int = array.size)
+    protected fun swap(array: ArrayList<T>, index1: Int, index2: Int) {
         val temp = array[index1]
         array[index1] = array[index2]
         array[index2] = temp
@@ -77,11 +78,12 @@ abstract class Heap() {
 
 }
 
-class MinHeap() : Heap() {
+
+class MinHeap<T : Number>() : Heap<T>() {
 
 
-    override fun heapifyUp(array: ArrayList<Int>, index: Int, size: Int) {
-        if (hasParent(index) && parentChild(index) > arrayV[index]) {
+    override fun heapifyUp(array: ArrayList<T>, index: Int, size: Int) {
+        if (hasParent(index) && parentChild(index).compareTo(arrayV[index], '>')) {
             swap(arrayV, parentIndex(index), index)
             heapifyUp(index = parentIndex(index))
         }
@@ -90,11 +92,11 @@ class MinHeap() : Heap() {
 
     // 0 1 2 3 4 5 6
     // 4 7 8 3 2 6 5
-    override fun heapifyDown(array: ArrayList<Int>, index: Int, size: Int) {
+    override fun heapifyDown(array: ArrayList<T>, index: Int, size: Int) {
         var lowestIndexValue = index
-        if (hasLeftChild(index) && leftChild(index) < array[index])
+        if (hasLeftChild(index) && leftChild(index).compareTo(array[index], '<'))
             lowestIndexValue = leftChildIndex(index)
-        if (hasRightChild(index) && rightChild(index) < array[lowestIndexValue])
+        if (hasRightChild(index) && rightChild(index).compareTo(array[lowestIndexValue], '<'))
             lowestIndexValue = rightChildIndex(index)
         if (lowestIndexValue != index) {
             swap(array, index, lowestIndexValue)
@@ -107,10 +109,11 @@ class MinHeap() : Heap() {
 
 }
 
-class MaxHeap() : Heap() {
 
-    override fun heapifyUp(array: ArrayList<Int>, index: Int, size: Int) {
-        if (hasParent(index) && parentChild(index) < arrayV[index]) {
+class MaxHeap<T : Number>() : Heap<T>() {
+
+    override fun heapifyUp(array: ArrayList<T>, index: Int, size: Int) {
+        if (hasParent(index) && parentChild(index).compareTo(arrayV[index], '<')) {
             swap(arrayV, parentIndex(index), index)
             heapifyUp(index = parentIndex(index))
         }
@@ -118,11 +121,11 @@ class MaxHeap() : Heap() {
 
     // 0 1 2 3 4 5 6
     // 4 7 8 3 2 6 5
-    override fun heapifyDown(array: ArrayList<Int>, index: Int, size: Int) {
+    override fun heapifyDown(array: ArrayList<T>, index: Int, size: Int) {
         var greatestIndexValue = index
-        if (hasLeftChild(index) && leftChild(index) > array[index])
+        if (hasLeftChild(index) && leftChild(index).compareTo(array[index], '>'))
             greatestIndexValue = leftChildIndex(index)
-        if (hasRightChild(index) && rightChild(index) > array[greatestIndexValue])
+        if (hasRightChild(index) && rightChild(index).compareTo(array[greatestIndexValue], '>'))
             greatestIndexValue = rightChildIndex(index)
         if (greatestIndexValue != index) {
             swap(array, index, greatestIndexValue)
