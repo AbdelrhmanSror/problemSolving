@@ -14,7 +14,7 @@ fun main() {
 
 /**
  * solution
- * the main point here to loop through each char in the word+previous words to see if its a palindrome or not
+ * the com.company.graph.main point here to loop through each char in the word+previous words to see if its a palindrome or not
  * if its a palindrome we search for reversed suffix in map ,if it exists and its index is not the same with current word
  * so we are facing possible string that could be concatenated with current word to form a palindrome
  * at each iteration w do the check for the prefix and suffix .
