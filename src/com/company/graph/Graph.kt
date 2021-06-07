@@ -40,4 +40,7 @@ import kotlin.collections.HashMap
     }
 
 
-}
+     override fun toString(): String {
+         return connections.toString()
+     }
+ }
