@@ -1,6 +1,7 @@
 package com.company.graph
 
 import java.util.*
+import kotlin.collections.HashMap
 import kotlin.collections.HashSet
 
 
@@ -8,14 +9,14 @@ data class Node<T>(var parent: T, var rank: Int = 0)
 
 fun main() {
     val graph = Graph<String>()
-     graph.addConnection("You", "Claire", "Bob", "Alice")
-     graph.addConnection("Alice", "Peggy")
-     graph.addConnection("Bob", "Peggy", "Anuj")
-     graph.addConnection("Anuj", "")
-     graph.addConnection("Peggy", "")
-     graph.addConnection("Claire", "Thom", "Jonny")
-     graph.addConnection("Thom", "")
-     graph.addConnection("Jonny", "")
+    graph.addConnection("You", "Claire", "Bob", "Alice")
+    graph.addConnection("Alice", "Peggy")
+    graph.addConnection("Bob", "Peggy", "Anuj")
+    graph.addConnection("Anuj", "")
+    graph.addConnection("Peggy", "")
+    graph.addConnection("Claire", "Thom", "Jonny")
+    graph.addConnection("Thom", "")
+    graph.addConnection("Jonny", "")
     print(GraphCycle1(graph).hasCycle())
 
 
@@ -34,7 +35,6 @@ class GraphCycle2<T>(private val graph: Graph<T>) : GraphCycle<T> {
     private val nodeMap = HashMap<T, Node<T>>()
 
     init {
-        println(graph.getParents())
         graph.getParents().forEach {
             createIfNotExist(it)
         }
@@ -42,20 +42,13 @@ class GraphCycle2<T>(private val graph: Graph<T>) : GraphCycle<T> {
 
     override fun hasCycle(): Boolean {
         graph.getParents().forEach { parent ->
-            graph.getChild(parent)?.let { childs ->
-                val childIterator = childs.iterator()
-                while (childIterator.hasNext()) {
-                    val next=childIterator.next()
-                    println("parent $parent  child $next")
-                    val src = findRoot(parent)
-                    val des = findRoot(next)
-                    if (src == des) {
-                        return true
-                    }
-                    union(src, des)
-
+            graph.getChild(parent)?.forEach {
+                val src = findRoot(nodeMap, parent)
+                val des = findRoot(nodeMap, it)
+                if (src == des) {
+                    return true
                 }
-
+                union(nodeMap, src, des)
 
             }
 
@@ -66,30 +59,30 @@ class GraphCycle2<T>(private val graph: Graph<T>) : GraphCycle<T> {
 
     }
 
-    private fun findRoot(node: T): T {
+    private fun findRoot(map: HashMap<T, Node<T>>, node: T): T {
         //here this if statement is as if i said [if(nodeMap[node].parent!=node)]
-        if (nodeMap[node]!!.parent == node) {
+        if (map[node]!!.parent == node) {
             return node
         }
-        return findRoot(nodeMap[node]!!.parent)
+        return findRoot(map, map[node]!!.parent)
 
     }
 
 
-    private fun union(src: T, des: T) {
+    private fun union(map: HashMap<T, Node<T>>, src: T, des: T) {
         when {
-            nodeMap[src]!!.rank > nodeMap[des]!!.rank -> {
-                nodeMap[des]?.parent = src
+            map[src]!!.rank > map[des]!!.rank -> {
+                map[des]?.parent = src
 
             }
-            nodeMap[src]!!.rank < nodeMap[des]!!.rank -> {
-                nodeMap[src]?.parent = des
+            map[src]!!.rank < map[des]!!.rank -> {
+                map[src]?.parent = des
 
 
             }
             else -> {
-                nodeMap[src]!!.parent = des
-                nodeMap[des]!!.rank++
+                map[src]!!.parent = des
+                map[des]!!.rank++
 
 
             }
@@ -112,6 +105,12 @@ class GraphCycle2<T>(private val graph: Graph<T>) : GraphCycle<T> {
 class GraphCycle1<T>(private val graph: Graph<T>) : GraphCycle<T> {
     //running in O(v+e) time and O(v)space
     override fun hasCycle(): Boolean {
+        return hasCycle() { x: T, y: HashSet<T>, z: HashSet<T> ->
+            search(x, y, z)
+        }
+    }
+
+    private fun hasCycle(search: ((x: T, y: HashSet<T>, z: HashSet<T>) -> Boolean)): Boolean {
         //to store all items visited until now in all recursion stack
         val visited = HashSet<T>()
         //to store all visited items in the current recursion stack
