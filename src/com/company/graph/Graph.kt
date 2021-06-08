@@ -3,7 +3,7 @@ package com.company.graph
 import java.util.*
 import kotlin.collections.HashMap
 
- class Graph<T> {
+class Graph<T> {
     private val connections: HashMap<T, LinkedList<T>> = HashMap()
 
     /**
@@ -31,6 +31,10 @@ import kotlin.collections.HashMap
         return connections[parent]
     }
 
+    fun removeChild(parent: T, child: T) {
+        connections[parent]?.remove(child)
+    }
+
     fun contains(value: T): Boolean {
         return connections.containsKey(value)
     }
@@ -40,7 +44,7 @@ import kotlin.collections.HashMap
     }
 
 
-     override fun toString(): String {
-         return connections.toString()
-     }
- }
+    override fun toString(): String {
+        return connections.toString()
+    }
+}
