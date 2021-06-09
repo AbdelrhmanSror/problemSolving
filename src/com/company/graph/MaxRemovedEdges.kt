@@ -70,7 +70,7 @@ private fun <T> search(graph: Graph<T>, parent: T?, vertex: T, visited: HashSet<
     }
     //if parent  is not null continue checking in ,this checking for the the first node because it has no parent
     parent?.let {
-        //if the node size is odd we increment the counter to increase number of removing edges , and update the size of the node in nodeSize
+        //if the node size is odd we, increment the counter to increase number of removing edges , and update the size of the node in nodeSize
         if (childs != null && nodeSize[vertex]!! % 2 != 0) {
             counter++
             nodeSize[parent] = nodeSize[parent]!! - 1
