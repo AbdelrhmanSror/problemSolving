@@ -36,6 +36,7 @@ fun main() {
     print(maxRemovedEdges(graph))
 }
 //o(n) number of nodes in tree and o(n) space
+
 fun <T> maxRemovedEdges(graph: Graph<T>): Int {
     //to store the visited nodes so we do not have to visit it again
     val visited = HashSet<T>()
