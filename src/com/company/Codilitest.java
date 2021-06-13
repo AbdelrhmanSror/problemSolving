@@ -19,6 +19,7 @@ import java.util.HashSet;
  * each element of array A is an integer within the range [−1,000,000..1,000,000].
  */
 
+/*
 
 public class Codilitest {
     public static void main(String[] args) {
@@ -26,8 +27,10 @@ public class Codilitest {
         x[0] = 1;
         x[1] = 1;
         x[2] = 3;
-        /* x[3]=3;
-         x[4]=3;*/
+        */
+/* x[3]=3;
+         x[4]=3;*//*
+
         // System.out.println(solution(x,2));
         System.out.println(minParentheses(")()("));
 
@@ -66,3 +69,5 @@ public class Codilitest {
             return true;
     }
 }
+*/
+
