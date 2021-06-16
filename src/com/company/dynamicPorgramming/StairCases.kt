@@ -1,4 +1,4 @@
-package com.company
+package com.company.dynamicPorgramming
 
 fun main() {
     print(stairCase(3))
@@ -9,20 +9,17 @@ fun main() {
 fun stairCase(n: Int, stepMap: HashMap<Int, Int> = HashMap()): Int {
     if (n < 0) return 0
     if (n == 0) return 1
-    var counter = 0
     var value = 0
-    for (i in 1..3) {
-        value += if (stepMap.containsKey(n - i)) {
-            stepMap[n - i]!!
+    for (step in 1..3) {
+        value += if (stepMap.containsKey(n - step)) {
+            stepMap[n - step]!!
         } else {
-            stairCase(n - i, stepMap)
+            stairCase(n - step, stepMap)
 
         }
     }
-    counter += value
     stepMap[n] = value
-    //println(stepMap)
 
-    return counter
+    return stepMap[n]!!
 }
 

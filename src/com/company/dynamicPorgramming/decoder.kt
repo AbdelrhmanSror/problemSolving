@@ -1,9 +1,9 @@
-package com.company
+package com.company.dynamicPorgramming
 
 import java.util.*
 import kotlin.Comparator
-import kotlin.math.ceil
-import kotlin.math.floor
+import kotlin.collections.HashMap
+import kotlin.math.pow
 
 /**
  * Given the mapping a = 1, b = 2, ... z = 26, and an encoded message,
@@ -12,13 +12,44 @@ import kotlin.math.floor
  * You can assume that the messages are decodable. For example, '001' is not allowed */
 
 /**
- * the approach i will take is to add up prevnumber of ways to the current way .
+ * the approach i will take is to add up prev number of ways to the current way .
  * also if it is applicable to construct a number with current number and previous number i will add up the previous of previous numberOfWays
  */
 
 
 fun main() {
-    //print(getNumberOfWays("111"))
+    println(getNumberOfDecodedWays("111"))
+    println(getNumberOfWays("111"))
+}
+// if the string is  1567
+//will check when power is 3 for validity of 1
+//will check when power is 2 for validity of 15
+//will check when power is 3 for validity of 156 and so on
+
+fun numberOnLeftLessThan(comparedNumber: Int, stringNumber: String, power: Int): Boolean {
+    return stringNumber.toDouble() / 10.0.pow(power).toInt() < comparedNumber
+}
+
+fun getNumberOfDecodedWays(s: String, dictionary: HashMap<String, Int> = HashMap()): Int {
+    if (s.length == 1) return 0
+    var power = s.length - 1
+    var counter = 0
+    while (power > 0 && numberOnLeftLessThan(27, s, power)) {
+        //the reminder string number after first n number based on the power
+        // number is 1567  and power is 3 will return 567
+        //number is 1567  and power is 2 will return 67
+        //number is 1567  and power is 1 will return 7 and so on
+        val rightPartNumber = (s.toDouble() % (10.0.pow(power))).toInt()
+        if (rightPartNumber < 27) counter++
+        counter += if (dictionary.containsKey(rightPartNumber.toString()))
+            dictionary[rightPartNumber.toString()]!!
+        else
+            getNumberOfDecodedWays(rightPartNumber.toString(), dictionary)
+        power--
+    }
+    dictionary[s] = counter
+    return counter
+
 }
 
 
@@ -31,6 +62,7 @@ class CompareElement : Comparator<Int> {
         }
     }
 }
+
 private data class Node(val numberOfWays: Int, val prevNode: Node? = null)
 
 fun getNumberOfWays(message: String): Int {
