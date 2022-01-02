@@ -43,7 +43,6 @@ fun getMinCost(colorCost: Array<Array<Int>>):Int {
     return minCost
 }
 
-private fun Array<Array<Int>>.currentCost(row: Int, column: Int) =
-        this[row][column]
+private fun Array<Array<Int>>.currentCost(row: Int, column: Int) = this[row][column]
 
 private fun Int.notTheSameColor(previousColorIndex: Int) = this != previousColorIndex

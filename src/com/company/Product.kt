@@ -7,8 +7,12 @@ package com.company
 
 
 fun main() {
-    product2(arrayOf(3,2,1)).forEach { println(it) }
+    product2(arrayOf(1, 2, 3, 4, 5)).forEach { println(it) }
+
+
 }
+
+
 
 
 //another solution not using division o(n)time o(n)space
